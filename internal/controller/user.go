@@ -10,3 +10,9 @@ func Register(c *gin.Context) {
 		"msg": "Hello World",
 	})
 }
+
+func Login(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "Hello World",
+	})
+}

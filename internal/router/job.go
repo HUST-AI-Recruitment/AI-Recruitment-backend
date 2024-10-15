@@ -1,19 +1,18 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"AI-Recruitment-backend/internal/middleware"
+	"github.com/gin-gonic/gin"
+)
 
 func initJobRouters(r *gin.RouterGroup) {
 	jobs := r.Group("jobs")
-	{
-		// create jobs
-		jobs.POST("")
-		// get all jobs
-		jobs.GET("")
-		// get job by id
-		jobs.GET("/:id")
-		// update job by id
-		jobs.PUT("/:id")
-		// delete job by id
-		jobs.DELETE("/:id")
-	}
+	jobs.GET("")     // get all jobs
+	jobs.GET("/:id") // get job by id
+
+	jobsAuth := r.Group("jobs")
+	jobsAuth.Use(middleware.JwtAuthMiddleware())
+	jobsAuth.POST("")       // create jobs
+	jobsAuth.PUT("/:id")    // update job by id
+	jobsAuth.DELETE("/:id") // delete job by id
 }

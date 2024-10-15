@@ -1,19 +1,16 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"AI-Recruitment-backend/internal/middleware"
+	"github.com/gin-gonic/gin"
+)
 
 func initResumeRouters(r *gin.RouterGroup) {
-	resumes := r.Group("resumes")
-	{
-		// create resumes
-		resumes.POST("")
-		// get all resumes
-		resumes.GET("")
-		// get resume by id
-		resumes.GET("/:id")
-		// update resume by id
-		resumes.PUT("/:id")
-		// delete resume by id
-		resumes.DELETE("/:id")
-	}
+	resumesAuth := r.Group("resumes")
+	resumesAuth.Use(middleware.JwtAuthMiddleware())
+	resumesAuth.POST("")       // create resumes
+	resumesAuth.GET("")        // get all resumes
+	resumesAuth.GET("/:id")    // get resume by id
+	resumesAuth.PUT("/:id")    // update resume by id
+	resumesAuth.DELETE("/:id") // delete resume by id
 }
