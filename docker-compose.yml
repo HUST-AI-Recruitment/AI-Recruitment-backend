@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  server:
+    build: .
+    ports:
+      - "8001:8001"
+    networks:
+      - recruitment
+    restart: always
+
+networks:
+  recruitment:
+    driver: bridge

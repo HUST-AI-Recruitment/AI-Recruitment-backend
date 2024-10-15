@@ -1,0 +1,4 @@
+app:
+  addr: ':8001'
+  api_prefix: '/api/v1'
+  debug: true
