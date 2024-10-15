@@ -7,13 +7,22 @@ import (
 )
 
 type Config struct {
-	App app `yaml:"app"`
+	App  app  `yaml:"app"`
+	User user `yaml:"user"`
 }
 
 type app struct {
 	Addr      string `yaml:"addr"`
 	ApiPrefix string `yaml:"api_prefix"`
 	Debug     bool   `yaml:"debug"`
+}
+
+type user struct {
+	Jwt jwt `yaml:"jwt"`
+}
+
+type jwt struct {
+	Key string `yaml:"key"`
 }
 
 var C *Config
