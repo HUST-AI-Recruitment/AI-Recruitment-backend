@@ -6,8 +6,6 @@
 
 This backend is built with **Go** and the **Gin** web framework, with **MySQL** as the database, and uses **JWT** for authentication. It integrates with external AI services to analyze resumes and recommend job candidates efficiently.
 
----
-
 ## **Key Features**
 
 - **User Authentication**: JWT-based login and registration.
@@ -16,8 +14,6 @@ This backend is built with **Go** and the **Gin** web framework, with **MySQL** 
 - **AI Integration**: AI-powered resume screening and job matching.
 - **Admin Features**: Manage users, job posts, and resumes.
 - **RESTful API**: For smooth front-end and back-end interaction.
-
----
 
 ## **Project Structure**
 
@@ -33,8 +29,6 @@ This backend is built with **Go** and the **Gin** web framework, with **MySQL** 
 └── main.go             # Application entry point
 ```
 
----
-
 ## **Tech Stack**
 
 - **Language**: Go
@@ -43,16 +37,12 @@ This backend is built with **Go** and the **Gin** web framework, with **MySQL** 
 - **Authentication**: JWT
 - **AI Services**: Integrated with external Python-based AI services
 
----
-
 ## **Requirements**
 
 - **Go** 1.16+
 - **MySQL** 5.7+
 - **Python** 3.8+ (for AI services)
 - **Docker** (optional, for deployment)
-
----
 
 ## **Installation Guide**
 
@@ -118,8 +108,6 @@ python ai_service.py
 
 The AI service will run on `http://localhost:5000`.
 
----
-
 ## **Running Tests**
 
 To run the unit tests for the backend, use:
@@ -127,8 +115,6 @@ To run the unit tests for the backend, use:
 ```bash
 go test ./...
 ```
-
----
 
 ## **Deployment**
 
@@ -152,8 +138,6 @@ To deploy the backend using Docker:
 
 For large-scale deployment, you can use Kubernetes. Example deployment files can be included in the `k8s/` folder.
 
----
-
 ## **Contributing**
 
 We welcome contributions! If you'd like to contribute:
@@ -164,12 +148,6 @@ We welcome contributions! If you'd like to contribute:
 4. Push your changes to your fork (`git push origin feature-xyz`).
 5. Open a pull request to the main repository.
 
----
-
 ## **License**
 
 This project is licensed under the **MIT License**. For more details, see the [LICENSE](LICENSE) file.
-
----
-
-This enhanced `README.md` includes a clean structure, sections, and formatting improvements that make it easier to read and navigate. You can modify any part of it to fit your specific project needs.
