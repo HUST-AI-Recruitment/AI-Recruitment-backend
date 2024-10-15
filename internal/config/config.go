@@ -22,7 +22,8 @@ type user struct {
 }
 
 type jwt struct {
-	Key string `yaml:"key"`
+	Key    string `yaml:"key"`
+	Issuer string `yaml:"issuer"`
 }
 
 var C *Config

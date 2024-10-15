@@ -4,4 +4,5 @@ app:
   debug: true
 user:
   jwt:
-    key:"FUCKINGSoftwareEngine"
+    key: "FUCKINGSoftwareEngine"
+    issuer: "HUST"
