@@ -1,15 +1,12 @@
 package jwt
 
 import (
-	"AI-Recruitment-backend/internal/config"
 	"AI-Recruitment-backend/pkg/common"
 	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
-
-var jwtKey = []byte(config.C.User.Jwt.Key)
 
 type Claims struct {
 	Role common.Role `json:"role"`
@@ -34,12 +31,12 @@ func GenerateJwtToken(id string, role common.Role, expire int64, issuer string) 
 	return token
 }
 
-func GenerateJwtTokenString(token *jwt.Token) (string, error) {
+func GenerateJwtTokenString(token *jwt.Token, jwtKey []byte) (string, error) {
 	tokenString, err := token.SignedString(jwtKey)
 	return tokenString, err
 }
 
-func ParseJwtToken(tokenString string) (*Claims, error) {
+func ParseJwtToken(tokenString string, jwtKey []byte) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})

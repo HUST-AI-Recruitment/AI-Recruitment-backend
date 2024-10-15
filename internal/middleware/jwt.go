@@ -1,7 +1,8 @@
 package middleware
 
 import (
-	"AI-Recruitment-backend/internal/common/response"
+	"AI-Recruitment-backend/internal/global"
+	"AI-Recruitment-backend/internal/global/response"
 	j "AI-Recruitment-backend/internal/pkg/jwt"
 	"AI-Recruitment-backend/pkg/jwt"
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 		tokenString = tokenString[7:]
 
 		// parse token
-		tokenClaims, err := jwt.ParseJwtToken(tokenString)
+		tokenClaims, err := jwt.ParseJwtToken(tokenString, []byte(global.Config.Jwt.Key))
 		if err != nil {
 			response.Error(c, http.StatusUnauthorized, response.CodeInvalidToken, "invalid token")
 			c.Abort()

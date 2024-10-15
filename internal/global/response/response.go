@@ -1,7 +1,7 @@
 package response
 
 import (
-	"AI-Recruitment-backend/internal/config"
+	"AI-Recruitment-backend/internal/global"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +23,7 @@ func Success(c *gin.Context, status int, code ErrorCode, data Data, msg string) 
 }
 
 func Error(c *gin.Context, status int, code ErrorCode, msg string, err ...string) {
-	if config.C.App.Debug {
+	if global.Config.App.Debug {
 		c.JSON(status, response{
 			Code:  code,
 			Msg:   msg,

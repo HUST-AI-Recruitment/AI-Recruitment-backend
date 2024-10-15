@@ -7,37 +7,43 @@ import (
 )
 
 type Config struct {
-	App  app  `yaml:"app"`
-	User user `yaml:"user"`
+	App      App      `yaml:"app"`
+	Jwt      Jwt      `yaml:"jwt"`
+	Database Database `yaml:"database"`
 }
 
-type app struct {
+type App struct {
 	Addr      string `yaml:"addr"`
 	ApiPrefix string `yaml:"api_prefix"`
 	Debug     bool   `yaml:"debug"`
 }
 
-type user struct {
-	Jwt jwt `yaml:"jwt"`
-}
-
-type jwt struct {
+type Jwt struct {
 	Key    string `yaml:"key"`
 	Issuer string `yaml:"issuer"`
 }
 
-var C *Config
+type Database struct {
+	UserName     string `yaml:"username"`
+	Password     string `yaml:"password"`
+	Host         string `yaml:"host"`
+	DBName       string `yaml:"db_name"`
+	Charset      string `yaml:"charset"`
+	ParseTime    bool   `yaml:"parse_time"`
+	MaxIdleConns int    `yaml:"max_idle_conns"`
+	MaxOpenConns int    `yaml:"max_open_conns"`
+}
 
-func init() {
+func NewConfig() (*Config, error) {
 	configFile := "default.yaml"
 	r, err := os.ReadFile(fmt.Sprintf("./configs/%s", configFile))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	config := &Config{}
 	err = yaml.Unmarshal(r, config)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	C = config
+	return config, nil
 }
