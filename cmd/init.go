@@ -23,5 +23,13 @@ func initDB() error {
 	if err != nil {
 		return err
 	}
+
+	// Migrate the schema
+	err = model.MigrateSchema(global.DBEngine, []interface{}{
+		&model.User{},
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

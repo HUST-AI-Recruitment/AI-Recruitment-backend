@@ -7,14 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewDBEngine(databaseSetting *config.Database) (*gorm.DB, error) {
+func NewDBEngine(databaseConfig *config.Database) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local",
-		databaseSetting.UserName,
-		databaseSetting.Password,
-		databaseSetting.Host,
-		databaseSetting.DBName,
-		databaseSetting.Charset,
-		databaseSetting.ParseTime,
+		databaseConfig.UserName,
+		databaseConfig.Password,
+		databaseConfig.Host,
+		databaseConfig.DBName,
+		databaseConfig.Charset,
+		databaseConfig.ParseTime,
 	)
 
 	//if global.Config.App.Debug == true {
@@ -30,8 +30,16 @@ func NewDBEngine(databaseSetting *config.Database) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	sqlDB.SetMaxIdleConns(databaseSetting.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(databaseSetting.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(databaseConfig.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(databaseConfig.MaxOpenConns)
 
 	return db, nil
+}
+
+func MigrateSchema(db *gorm.DB, schemas []interface{}) error {
+	err := db.AutoMigrate(schemas...)
+	if err != nil {
+		return err
+	}
+	return nil
 }
