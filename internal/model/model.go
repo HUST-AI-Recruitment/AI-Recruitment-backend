@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 )
 
 func NewDBEngine(databaseSetting *config.Database) (*gorm.DB, error) {
@@ -17,17 +16,12 @@ func NewDBEngine(databaseSetting *config.Database) (*gorm.DB, error) {
 		databaseSetting.Charset,
 		databaseSetting.ParseTime,
 	)
-	dbConfig := &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
-		},
-	}
 
 	//if global.Config.App.Debug == true {
 	//	config.Logger = logger.Default.LogMode(logger.Info)
 	//}
 
-	db, err := gorm.Open(mysql.Open(dsn), dbConfig)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

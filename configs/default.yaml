@@ -5,7 +5,7 @@ app:
 database:
   username: root
   password: root
-  host: 127.0.0.1:3306
+  host: 'db:3306'
   db_name: ai_recruitment
   charset: utf8
   parse_time: true

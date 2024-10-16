@@ -7,6 +7,22 @@ services:
       - "8001:8001"
     networks:
       - recruitment
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ai_recruitment
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data/mysql/conf/my.cnf:/etc/mysql/my.cnf
+      - ./data/mysql/data:/var/lib/mysql
+      - ./data/mysql/log:/var/log
+    networks:
+      - recruitment
     restart: always
 
 networks:
