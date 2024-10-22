@@ -21,6 +21,7 @@ type App struct {
 type Jwt struct {
 	Key    string `yaml:"key"`
 	Issuer string `yaml:"issuer"`
+	Expire int64  `yaml:"expire"`
 }
 
 type Database struct {

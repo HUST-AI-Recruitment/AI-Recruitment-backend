@@ -3,7 +3,9 @@ package response
 type ErrorCode int32
 
 const (
-	CodeSuccess      ErrorCode = 0
-	CodeInvalidToken ErrorCode = 10001
-	CodeUnauthorized ErrorCode = 10002
+	CodeSuccess       ErrorCode = 0
+	CodeInvalidToken  ErrorCode = 40001
+	CodeUnauthorized  ErrorCode = 40002
+	CodeInvalidParams ErrorCode = 40003
+	CodeServerBusy    ErrorCode = 50001
 )

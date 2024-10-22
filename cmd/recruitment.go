@@ -3,20 +3,26 @@ package main
 import (
 	"AI-Recruitment-backend/internal/global"
 	"AI-Recruitment-backend/internal/router"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
 	err := initConfig()
 	if err != nil {
 		log.Fatalf("init.initConfig err: %v", err)
+	} else {
+		log.Println("init.initConfig success")
 	}
 
 	err = initDB()
 	if err != nil {
 		log.Fatalf("init.initDB err: %v", err)
+	} else {
+		log.Println("init.initDB success")
 	}
+
 }
 
 func main() {
