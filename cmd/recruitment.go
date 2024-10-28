@@ -2,6 +2,7 @@ package main
 
 import (
 	"AI-Recruitment-backend/internal/global"
+	"AI-Recruitment-backend/internal/middleware"
 	"AI-Recruitment-backend/internal/router"
 	"log"
 
@@ -27,6 +28,7 @@ func init() {
 
 func main() {
 	r := gin.Default()
+	r.Use(middleware.Cors())
 
 	router.InitRouters(r)
 	r.Run(global.Config.App.Addr)
