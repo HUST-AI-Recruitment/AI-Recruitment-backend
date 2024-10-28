@@ -4,7 +4,7 @@ app:
   debug: true
 database:
   username: root
-  password: root
+  password: HUST1037!@#$
   host: 'db:3306'
   db_name: ai_recruitment
   charset: utf8
