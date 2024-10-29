@@ -9,9 +9,11 @@ type Job struct {
 	*gorm.Model
 	Title       string `gorm:"type:varchar(255);not null" json:"title"`
 	Description string `gorm:"type:text;not null" json:"description"`
+	Demand      string `gorm:"type:text;not null" json:"demand"`
 	Location    string `gorm:"type:varchar(255);not null" json:"location"`
 	Company     string `gorm:"type:varchar(255);not null" json:"company"`
 	Salary      string `gorm:"type:varchar(255);not null" json:"salary"`
+	JobType     string `gorm:"type:varchar(255);not null" json:"job_type"`
 }
 
 func (j Job) TableName() string {

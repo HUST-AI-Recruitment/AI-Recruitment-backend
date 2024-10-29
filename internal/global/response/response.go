@@ -24,6 +24,17 @@ type UserData struct {
 	Degree   common.Degree `json:"degree"`
 }
 
+type JobData struct {
+	ID          uint   `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Demand      string `json:"demand"`
+	Location    string `json:"location"`
+	Company     string `json:"company"`
+	Salary      string `json:"salary"`
+	JobType     string `json:"job_type"`
+}
+
 func Success(c *gin.Context, status int, code ErrorCode, data Data, msg string) {
 	c.JSON(status, response{
 		Code: code,

@@ -6,6 +6,7 @@ import (
 	"AI-Recruitment-backend/internal/global/response"
 	"AI-Recruitment-backend/internal/model"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -15,37 +16,66 @@ func GetJobList(c *gin.Context) {
 	location := c.Query("location")
 	company := c.Query("company")
 	salary := c.Query("salary")
+	jobType := c.Query("job_type")
 
 	job := &model.Job{
 		Location: location,
 		Company:  company,
 		Salary:   salary,
+		JobType:  jobType,
 	}
 	jobs, err := job.GetAll(global.DBEngine)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get all jobs failed", err.Error())
 		return
 	}
-	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"jobs": jobs}, "get all jobs success")
+
+	var jobsData []response.JobData
+	for _, j := range *jobs {
+		jobsData = append(jobsData, response.JobData{
+			ID:          j.ID,
+			Title:       j.Title,
+			Description: j.Description,
+			Demand:      j.Demand,
+			Location:    j.Location,
+			Company:     j.Company,
+			Salary:      j.Salary,
+			JobType:     j.JobType,
+		})
+	}
+
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"jobs": jobsData}, "get all jobs success")
 }
 
 func GetJobByID(c *gin.Context) {
 	// get job by id
 	id := c.Param("id")
-	job := &model.Job{}
-
-	idInt, err := strconv.Atoi(id)
+	idUint, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid id", err.Error())
 		return
 	}
-	job.ID = uint(idInt)
+	job := &model.Job{
+		Model: &gorm.Model{
+			ID: uint(idUint),
+		},
+	}
 	job, err = job.Get(global.DBEngine)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get job failed", err.Error())
 		return
 	}
-	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"job": job}, "get job success")
+	jobData := response.JobData{
+		ID:          job.ID,
+		Title:       job.Title,
+		Description: job.Description,
+		Demand:      job.Demand,
+		Location:    job.Location,
+		Company:     job.Company,
+		Salary:      job.Salary,
+		JobType:     job.JobType,
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"job": jobData}, "get job success")
 }
 
 func CreateJob(c *gin.Context) {
@@ -58,9 +88,11 @@ func CreateJob(c *gin.Context) {
 	job := &model.Job{
 		Title:       req.Title,
 		Description: req.Description,
+		Demand:      req.Demand,
 		Location:    req.Location,
 		Company:     req.Company,
 		Salary:      req.Salary,
+		JobType:     req.JobType,
 	}
 
 	id, err := job.Create(global.DBEngine)
