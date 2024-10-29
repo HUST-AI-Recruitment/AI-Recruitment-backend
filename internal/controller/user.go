@@ -8,6 +8,7 @@ import (
 	"AI-Recruitment-backend/pkg/jwt"
 	"AI-Recruitment-backend/pkg/util"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -68,5 +69,32 @@ func Login(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "generate jwt token failed", err.Error())
 		return
 	}
-	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"token": token, "expire": global.Config.Jwt.Expire}, "login success")
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": user.ID, "token": token, "expire": global.Config.Jwt.Expire}, "login success")
+}
+
+func GetProfile(c *gin.Context) {
+	id := c.Param("id")
+	idUint, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid id", err.Error())
+		return
+	}
+	user := &model.User{
+		Model: &gorm.Model{ID: uint(idUint)},
+	}
+	user, err = user.Get(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get user failed", err.Error())
+		return
+	}
+
+	userData := response.UserData{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		Role:     user.Role,
+		Age:      user.Age,
+		Degree:   user.Degree,
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"profile": userData}, "get user profile success")
 }

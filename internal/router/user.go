@@ -10,11 +10,11 @@ func initUserRouters(r *gin.RouterGroup) {
 	users := r.Group("/user")
 	users.POST("", controller.Register) // register
 
-	userAuth := users.Group("/:username")
+	userAuth := users.Group("/:id")
 	userAuth.Use(middleware.JwtAuthMiddleware())
-	userAuth.GET("/profile")  // get user profile
-	userAuth.PUT("/profile")  // update user profile
-	userAuth.PUT("/password") // update user password
+	userAuth.GET("/profile", controller.GetProfile) // get user profile
+	userAuth.PUT("/profile")                        // update user profile
+	userAuth.PUT("/password")                       // update user password
 
 	session := r.Group("/session")
 	session.POST("", controller.Login) // login

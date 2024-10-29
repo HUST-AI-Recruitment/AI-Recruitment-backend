@@ -2,6 +2,7 @@ package response
 
 import (
 	"AI-Recruitment-backend/internal/global"
+	"AI-Recruitment-backend/pkg/common"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,15 @@ type response struct {
 }
 
 type Data map[string]any
+
+type UserData struct {
+	ID       uint          `json:"id"`
+	Username string        `json:"username"`
+	Email    string        `json:"email"`
+	Role     common.Role   `json:"role"`
+	Age      int           `json:"age"`
+	Degree   common.Degree `json:"degree"`
+}
 
 func Success(c *gin.Context, status int, code ErrorCode, data Data, msg string) {
 	c.JSON(status, response{
