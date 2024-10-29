@@ -14,4 +14,4 @@ database:
 jwt:
   key: "FUCKINGSoftwareEngine"
   issuer: "HUST"
-  expire: 168
+  expire: 604800
