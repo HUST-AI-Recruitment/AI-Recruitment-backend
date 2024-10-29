@@ -25,6 +25,10 @@ CREATE TABLE `job` (
     `location` varchar(255) NOT NULL,
     `company` varchar(255) NOT NULL,
     `salary` varchar(255) NOT NULL,
+    `demand` text NOT NULL,
+    `job_type` varchar(255) NOT NULL,
+    `owner` bigint NOT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_job_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+

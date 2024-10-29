@@ -83,6 +83,8 @@ func CreateJob(c *gin.Context) {
 	// check role of user
 	userData, _ := c.Get("user")
 	role := userData.(map[string]string)["role"]
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
 	if role != common.Role(1).String() {
 		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
 		return
@@ -102,6 +104,7 @@ func CreateJob(c *gin.Context) {
 		Company:     req.Company,
 		Salary:      req.Salary,
 		JobType:     req.JobType,
+		Owner:       uint(uidInt),
 	}
 
 	id, err := job.Create(global.DBEngine)
