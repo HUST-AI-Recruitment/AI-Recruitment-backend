@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"AI-Recruitment-backend/pkg/common"
-	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -40,14 +39,13 @@ func ParseJwtToken(tokenString string, jwtKey []byte) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
-	if err != nil {
+	if token == nil {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*Claims)
-	if !ok {
-		return nil, errors.New("parse jwt token failed")
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
+		return claims, nil
 	}
 
-	return claims, nil
+	return nil, err
 }

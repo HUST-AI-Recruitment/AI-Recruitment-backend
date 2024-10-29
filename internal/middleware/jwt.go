@@ -15,7 +15,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 		// get token string from header
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
-			response.Error(c, http.StatusUnauthorized, response.CodeInvalidToken, "invalid token")
+			response.Error(c, http.StatusUnauthorized, response.CodeInvalidToken, "invalid token", "")
 			c.Abort()
 			return
 		}
@@ -24,7 +24,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 		// parse token
 		tokenClaims, err := jwt.ParseJwtToken(tokenString, []byte(global.Config.Jwt.Key))
 		if err != nil {
-			response.Error(c, http.StatusUnauthorized, response.CodeInvalidToken, "invalid token")
+			response.Error(c, http.StatusUnauthorized, response.CodeInvalidToken, "parse token failed", err.Error())
 			c.Abort()
 			return
 		}
