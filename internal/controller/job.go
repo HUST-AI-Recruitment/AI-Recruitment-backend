@@ -5,6 +5,7 @@ import (
 	"AI-Recruitment-backend/internal/global/param"
 	"AI-Recruitment-backend/internal/global/response"
 	"AI-Recruitment-backend/internal/model"
+	"AI-Recruitment-backend/pkg/common"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -79,6 +80,14 @@ func GetJobByID(c *gin.Context) {
 }
 
 func CreateJob(c *gin.Context) {
+	// check role of user
+	userData, _ := c.Get("user")
+	role := userData.(map[string]string)["role"]
+	if role != common.Role(1).String() {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
 	var req param.ReqCreateJob
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid params", err.Error())
