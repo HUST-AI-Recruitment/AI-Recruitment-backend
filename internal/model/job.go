@@ -45,7 +45,19 @@ func (j Job) Get(db *gorm.DB) (*Job, error) {
 
 func (j Job) GetAll(db *gorm.DB) (*[]Job, error) {
 	var jobs []Job
-	err := db.Find(&jobs).Error
+	query := db.Model(&Job{})
+
+	if j.Location != "" {
+		query = query.Where("location = ?", j.Location)
+	}
+	if j.Company != "" {
+		query = query.Where("company = ?", j.Company)
+	}
+	if j.Salary != "" {
+		query = query.Where("salary = ?", j.Salary)
+	}
+
+	err := query.Find(&jobs).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return &jobs, err
 	}

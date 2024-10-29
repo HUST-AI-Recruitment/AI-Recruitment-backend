@@ -17,7 +17,7 @@ func NewDBEngine(databaseConfig *config.Database) (*gorm.DB, error) {
 		databaseConfig.Charset,
 		databaseConfig.ParseTime,
 	)
-	config := &gorm.Config{
+	conf := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -26,7 +26,7 @@ func NewDBEngine(databaseConfig *config.Database) (*gorm.DB, error) {
 	//	config.Logger = logger.Default.LogMode(logger.Info)
 	//}
 
-	db, err := gorm.Open(mysql.Open(dsn), config)
+	db, err := gorm.Open(mysql.Open(dsn), conf)
 	if err != nil {
 		return nil, err
 	}
