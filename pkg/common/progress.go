@@ -8,3 +8,16 @@ const (
 	accepted
 	rejected
 )
+
+func (p Progress) String() string {
+	switch p {
+	case delivered:
+		return "delivered"
+	case accepted:
+		return "accepted"
+	case rejected:
+		return "rejected"
+	default:
+		return "unknown"
+	}
+}
