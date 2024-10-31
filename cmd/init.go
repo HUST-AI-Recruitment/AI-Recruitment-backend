@@ -28,6 +28,11 @@ func initDB() error {
 	err = model.MigrateSchema(global.DBEngine, []interface{}{
 		&model.User{},
 		&model.Job{},
+		&model.Resume{},
+		&model.ResumeEducation{},
+		&model.ResumeExperience{},
+		&model.ResumeProject{},
+		&model.UserJob{},
 	})
 	if err != nil {
 		return err

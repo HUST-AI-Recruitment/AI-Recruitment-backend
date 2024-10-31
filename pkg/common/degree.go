@@ -3,7 +3,7 @@ package common
 type Degree int
 
 const (
-	HighSchool Degree = iota
+	_ Degree = iota
 	Bachelor
 	Master
 	Doctor
@@ -11,8 +11,6 @@ const (
 
 func (d Degree) String() string {
 	switch d {
-	case HighSchool:
-		return "high school"
 	case Bachelor:
 		return "bachelor"
 	case Master:
