@@ -104,7 +104,7 @@ func CreateJob(c *gin.Context) {
 		Company:     req.Company,
 		Salary:      req.Salary,
 		JobType:     req.JobType,
-		Owner:       uint(uidInt),
+		OwnerID:     uint(uidInt),
 	}
 
 	id, err := job.Create(global.DBEngine)
