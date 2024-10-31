@@ -14,7 +14,7 @@ type Job struct {
 	Company     string `gorm:"type:varchar(255);not null" json:"company"`
 	Salary      string `gorm:"type:varchar(255);not null" json:"salary"`
 	JobType     string `gorm:"type:varchar(255);not null" json:"job_type"`
-	Owner       uint   `gorm:"type:int;not null" json:"owner"`
+	OwnerID     uint   `gorm:"type:int;not null" json:"owner_id"`
 }
 
 func (j Job) TableName() string {
