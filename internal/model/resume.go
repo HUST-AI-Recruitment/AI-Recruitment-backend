@@ -62,6 +62,47 @@ func (rp ResumeProject) TableName() string {
 	return "resume_project"
 }
 
+func (r Resume) CreateResume(db *gorm.DB, edu *[]ResumeEducation, exp *[]ResumeExperience, project *[]ResumeProject) (uint, error) {
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Create(&r).Error; err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+	for _, e := range *edu {
+		e.ResumeID = r.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return 0, err
+		}
+	}
+	for _, e := range *exp {
+		e.ResumeID = r.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return 0, err
+		}
+	}
+	for _, e := range *project {
+		e.ResumeID = r.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return 0, err
+		}
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+	return r.ID, nil
+}
+
 func (r Resume) Create(db *gorm.DB) (uint, error) {
 	res := db.Create(&r)
 	if res.Error != nil {
