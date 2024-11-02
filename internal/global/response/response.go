@@ -4,6 +4,7 @@ import (
 	"AI-Recruitment-backend/internal/global"
 	"AI-Recruitment-backend/pkg/common"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type response struct {
@@ -33,6 +34,43 @@ type JobData struct {
 	Company     string `json:"company"`
 	Salary      string `json:"salary"`
 	JobType     string `json:"job_type"`
+}
+
+type ResumeData struct {
+	ID          uint               `json:"id"`
+	UserID      uint               `json:"user_id"`
+	Name        string             `json:"name"`
+	Gender      int                `json:"gender"`
+	Phone       string             `json:"phone"`
+	Email       string             `json:"email"`
+	Wechat      string             `json:"wechat"`
+	State       common.State       `json:"state"`
+	Description string             `json:"description"`
+	Education   []ResumeEducation  `json:"education"`
+	Experience  []ResumeExperience `json:"experience"`
+	Project     []ResumeProject    `json:"project"`
+}
+
+type ResumeEducation struct {
+	School    string        `json:"school"`
+	Major     string        `json:"major"`
+	Degree    common.Degree `json:"degree"`
+	StartTime time.Time     `json:"start_time"`
+	EndTime   time.Time     `json:"end_time"`
+}
+
+type ResumeExperience struct {
+	Company   string    `json:"company"`
+	Position  string    `json:"position"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+}
+
+type ResumeProject struct {
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	StartTime   time.Time `json:"start_time"`
+	EndTime     time.Time `json:"end_time"`
 }
 
 func Success(c *gin.Context, status int, code ErrorCode, data Data, msg string) {

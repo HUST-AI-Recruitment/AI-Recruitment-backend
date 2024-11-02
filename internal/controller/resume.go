@@ -74,3 +74,94 @@ func CreateResume(c *gin.Context) {
 
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": id}, "create resume success")
 }
+
+func GetResumeByUserId(c *gin.Context) {
+	userId := c.Param("user_id")
+	uidInt, err := strconv.Atoi(userId)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid user id", err.Error())
+		return
+	}
+
+	resume := &model.Resume{
+		UserID: uint(uidInt),
+	}
+	resume, err = resume.GetByUserID(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get resume list failed", err.Error())
+		return
+	}
+
+	resumeData := &response.ResumeData{
+		ID:          resume.ID,
+		UserID:      resume.UserID,
+		Name:        resume.Name,
+		Gender:      resume.Gender,
+		Phone:       resume.Phone,
+		Email:       resume.Email,
+		Wechat:      resume.Wechat,
+		State:       resume.State,
+		Description: resume.Description,
+	}
+
+	edu := &model.ResumeEducation{
+		ResumeID: resume.ID,
+	}
+	eduList, err := edu.GetByResumeID(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get resume education list failed", err.Error())
+		return
+	}
+	var eduDataList []response.ResumeEducation
+	for _, v := range *eduList {
+		eduDataList = append(eduDataList, response.ResumeEducation{
+			School:    v.School,
+			Major:     v.Major,
+			Degree:    v.Degree,
+			StartTime: v.StartTime,
+			EndTime:   v.EndTime,
+		})
+	}
+
+	exp := &model.ResumeExperience{
+		ResumeID: resume.ID,
+	}
+	expList, err := exp.GetByResumeID(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get resume experience list failed", err.Error())
+		return
+	}
+	var expDataList []response.ResumeExperience
+	for _, v := range *expList {
+		expDataList = append(expDataList, response.ResumeExperience{
+			Company:   v.Company,
+			Position:  v.Position,
+			StartTime: v.StartTime,
+			EndTime:   v.EndTime,
+		})
+	}
+
+	project := &model.ResumeProject{
+		ResumeID: resume.ID,
+	}
+	projectList, err := project.GetByResumeID(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get resume project list failed", err.Error())
+		return
+	}
+	var projectDataList []response.ResumeProject
+	for _, v := range *projectList {
+		projectDataList = append(projectDataList, response.ResumeProject{
+			Name:        v.Name,
+			Description: v.Description,
+			StartTime:   v.StartTime,
+			EndTime:     v.EndTime,
+		})
+	}
+
+	resumeData.Education = eduDataList
+	resumeData.Experience = expDataList
+	resumeData.Project = projectDataList
+
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"resume": resumeData}, "get resume success")
+}
