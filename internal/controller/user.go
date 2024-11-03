@@ -69,7 +69,16 @@ func Login(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "generate jwt token failed", err.Error())
 		return
 	}
-	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": user.ID, "token": token, "expire": global.Config.Jwt.Expire}, "login success")
+	response.Success(
+		c, http.StatusOK,
+		response.CodeSuccess,
+		response.Data{
+			"id":     user.ID,
+			"role":   user.Role,
+			"token":  token,
+			"expire": global.Config.Jwt.Expire,
+		},
+		"login success")
 }
 
 func GetProfile(c *gin.Context) {

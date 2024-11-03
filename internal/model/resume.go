@@ -8,7 +8,7 @@ import (
 
 type Resume struct {
 	*gorm.Model
-	UserID      uint         `gorm:"type:int;unique;not null" json:"user_id"`
+	UserID      uint         `gorm:"type:int;primarykey;unique;not null" json:"user_id"`
 	Name        string       `gorm:"type:varchar(255);not null" json:"name"`
 	Gender      int          `gorm:"type:int;not null" json:"gender"`
 	Phone       string       `gorm:"type:varchar(255)" json:"phone"`
