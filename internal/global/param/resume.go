@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type ReqCreateResume struct {
+type ReqUpsertResume struct {
 	Name        string                      `json:"name" binding:"required"`
 	Gender      int                         `json:"gender" binding:"required"`
 	Phone       string                      `json:"phone"`
@@ -13,12 +13,12 @@ type ReqCreateResume struct {
 	Wechat      string                      `json:"wechat"`
 	State       common.State                `json:"state" binding:"required"`
 	Description string                      `json:"description"`
-	Education   []ReqCreateResumeEducation  `json:"education"`
-	Experience  []ReqCreateResumeExperience `json:"experience"`
-	Project     []ReqCreateResumeProject    `json:"project"`
+	Education   []ReqUpsertResumeEducation  `json:"education"`
+	Experience  []ReqUpsertResumeExperience `json:"experience"`
+	Project     []ReqUpsertResumeProject    `json:"project"`
 }
 
-type ReqCreateResumeEducation struct {
+type ReqUpsertResumeEducation struct {
 	School    string        `json:"school" binding:"required"`
 	Major     string        `json:"major" binding:"required"`
 	Degree    common.Degree `json:"degree" binding:"required"`
@@ -26,14 +26,14 @@ type ReqCreateResumeEducation struct {
 	EndTime   time.Time     `json:"end_time" binding:"required"`
 }
 
-type ReqCreateResumeExperience struct {
+type ReqUpsertResumeExperience struct {
 	Company   string    `json:"company" binding:"required"`
 	Position  string    `json:"position" binding:"required"`
 	StartTime time.Time `json:"start_time" binding:"required"`
 	EndTime   time.Time `json:"end_time" binding:"required"`
 }
 
-type ReqCreateResumeProject struct {
+type ReqUpsertResumeProject struct {
 	Name        string    `json:"name" binding:"required"`
 	Description string    `json:"description"`
 	StartTime   time.Time `json:"start_time" binding:"required"`

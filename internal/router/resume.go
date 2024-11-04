@@ -11,7 +11,6 @@ func initResumeRouters(r *gin.RouterGroup) {
 	resumesAuth.Use(middleware.JwtAuthMiddleware())
 	resumesAuth.POST("", controller.CreateResume)              // create resumes
 	resumesAuth.GET("")                                        // get all resumes
-	resumesAuth.GET("/:user_id", controller.GetResumeByUserId) // get resume by id
-	resumesAuth.PUT("/:id")                                    // update resume by id
-	resumesAuth.DELETE("/:id")                                 // delete resume by id
+	resumesAuth.GET("/:user_id", controller.GetResumeByUserId) // get resume by user_id
+	resumesAuth.PUT("", controller.UpdateResumeByUserId)       // update resume
 }

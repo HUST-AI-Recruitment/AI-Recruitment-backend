@@ -3,12 +3,13 @@ package model
 import (
 	"AI-Recruitment-backend/pkg/common"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"time"
 )
 
 type Resume struct {
 	*gorm.Model
-	UserID      uint         `gorm:"type:int;primarykey;unique;not null" json:"user_id"`
+	UserID      uint         `gorm:"type:int;unique;not null" json:"user_id"`
 	Name        string       `gorm:"type:varchar(255);not null" json:"name"`
 	Gender      int          `gorm:"type:int;not null" json:"gender"`
 	Phone       string       `gorm:"type:varchar(255)" json:"phone"`
@@ -103,6 +104,64 @@ func (r Resume) CreateResume(db *gorm.DB, edu *[]ResumeEducation, exp *[]ResumeE
 	return r.ID, nil
 }
 
+func (r Resume) UpdateResume(db *gorm.DB, edu *[]ResumeEducation, exp *[]ResumeExperience, project *[]ResumeProject) (*Resume, error) {
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	var resumes []Resume
+	if err := tx.Model(&Resume{}).Clauses(clause.Returning{}).Where("user_id = ?", r.UserID).Updates(r).Scan(&resumes).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	resume := resumes[0]
+
+	// delete all education, experience, project first
+	if err := tx.Where("resume_id = ?", resume.ID).Delete(&ResumeEducation{}).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if err := tx.Where("resume_id = ?", resume.ID).Delete(&ResumeExperience{}).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	if err := tx.Where("resume_id = ?", resume.ID).Delete(&ResumeProject{}).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	for _, e := range *edu {
+		e.ResumeID = resume.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	for _, e := range *exp {
+		e.ResumeID = resume.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	for _, e := range *project {
+		e.ResumeID = resume.ID
+		if err := tx.Create(&e).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	return &resume, nil
+}
+
 func (r Resume) Create(db *gorm.DB) (uint, error) {
 	res := db.Create(&r)
 	if res.Error != nil {
@@ -137,22 +196,6 @@ func (r Resume) GetByUserID(db *gorm.DB) (*Resume, error) {
 	return &resume, nil
 }
 
-func (re ResumeEducation) Create(db *gorm.DB) (uint, error) {
-	res := db.Create(&re)
-	if res.Error != nil {
-		return 0, res.Error
-	}
-	return re.ID, nil
-}
-
-func (re ResumeEducation) Update(db *gorm.DB, values map[string]interface{}) error {
-	return db.Model(&ResumeEducation{}).Where("id = ?", re.Model.ID).Updates(values).Error
-}
-
-func (re ResumeEducation) Delete(db *gorm.DB) error {
-	return db.Delete(&ResumeEducation{}, re.Model.ID).Error
-}
-
 func (re ResumeEducation) Get(db *gorm.DB) (*ResumeEducation, error) {
 	var resumeEducation ResumeEducation
 	err := db.Where("id = ?", re.Model.ID).First(&resumeEducation).Error
@@ -171,22 +214,6 @@ func (re ResumeEducation) GetByResumeID(db *gorm.DB) (*[]ResumeEducation, error)
 	return &resumeEducations, nil
 }
 
-func (re ResumeExperience) Create(db *gorm.DB) (uint, error) {
-	res := db.Create(&re)
-	if res.Error != nil {
-		return 0, res.Error
-	}
-	return re.ID, nil
-}
-
-func (re ResumeExperience) Update(db *gorm.DB, values map[string]interface{}) error {
-	return db.Model(&ResumeExperience{}).Where("id = ?", re.Model.ID).Updates(values).Error
-}
-
-func (re ResumeExperience) Delete(db *gorm.DB) error {
-	return db.Delete(&ResumeExperience{}, re.Model.ID).Error
-}
-
 func (re ResumeExperience) Get(db *gorm.DB) (*ResumeExperience, error) {
 	var resumeExperience ResumeExperience
 	err := db.Where("id = ?", re.Model.ID).First(&resumeExperience).Error
@@ -203,22 +230,6 @@ func (re ResumeExperience) GetByResumeID(db *gorm.DB) (*[]ResumeExperience, erro
 		return &resumeExperiences, err
 	}
 	return &resumeExperiences, nil
-}
-
-func (rp ResumeProject) Create(db *gorm.DB) (uint, error) {
-	res := db.Create(&rp)
-	if res.Error != nil {
-		return 0, res.Error
-	}
-	return rp.ID, nil
-}
-
-func (rp ResumeProject) Update(db *gorm.DB, values map[string]interface{}) error {
-	return db.Model(&ResumeProject{}).Where("id = ?", rp.Model.ID).Updates(values).Error
-}
-
-func (rp ResumeProject) Delete(db *gorm.DB) error {
-	return db.Delete(&ResumeProject{}, rp.Model.ID).Error
 }
 
 func (rp ResumeProject) Get(db *gorm.DB) (*ResumeProject, error) {
