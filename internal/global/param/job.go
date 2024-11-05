@@ -1,6 +1,6 @@
 package param
 
-type ReqCreateJob struct {
+type ReqUpsertJob struct {
 	Title       string `json:"title" binding:"required,min=2,max=255"`
 	Description string `json:"description" binding:"required,min=2"`
 	Demand      string `json:"demand" binding:"required,min=2"`

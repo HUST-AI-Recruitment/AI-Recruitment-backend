@@ -113,7 +113,7 @@ func CreateJob(c *gin.Context) {
 		return
 	}
 
-	var req param.ReqCreateJob
+	var req param.ReqUpsertJob
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid params", err.Error())
 		return
@@ -136,4 +136,60 @@ func CreateJob(c *gin.Context) {
 		return
 	}
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": id}, "create job success")
+}
+
+func UpdateJob(c *gin.Context) {
+	// check role of user
+	userData, _ := c.Get("user")
+	role := userData.(map[string]string)["role"]
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
+	if role != common.Recruiter.String() {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
+	jobId := c.Param("id")
+	jobIdInt, err := strconv.Atoi(jobId)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid id", err.Error())
+		return
+	}
+
+	var req param.ReqUpsertJob
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid params", err.Error())
+		return
+	}
+
+	// check if the job exists
+	job := &model.Job{
+		Model: &gorm.Model{ID: uint(jobIdInt)},
+	}
+	job, err = job.Get(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get job failed", err.Error())
+		return
+	}
+
+	// check if the job belongs to the user
+	if job.OwnerID != uint(uidInt) {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
+	job.Title = req.Title
+	job.Description = req.Description
+	job.Demand = req.Demand
+	job.Location = req.Location
+	job.Company = req.Company
+	job.Salary = req.Salary
+	job.JobType = req.JobType
+
+	job, err = job.Update(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "update job failed", err.Error())
+		return
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": job.ID}, "update job success")
 }

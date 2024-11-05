@@ -12,6 +12,6 @@ func initJobRouters(r *gin.RouterGroup) {
 	jobsAuth.GET("", controller.GetJobList)     // get all jobs
 	jobsAuth.GET("/:id", controller.GetJobByID) // get job by id
 	jobsAuth.POST("", controller.CreateJob)     // create job
-	jobsAuth.PUT("/:id")                        // update job by id
+	jobsAuth.PUT("/:id", controller.UpdateJob)  // update job by id
 	jobsAuth.DELETE("/:id")                     // delete job by id
 }

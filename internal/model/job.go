@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Job struct {
@@ -29,8 +30,12 @@ func (j Job) Create(db *gorm.DB) (uint, error) {
 	return j.ID, nil
 }
 
-func (j Job) Update(db *gorm.DB, values map[string]interface{}) error {
-	return db.Model(&Job{}).Where("id = ?", j.Model.ID).Updates(values).Error
+func (j Job) Update(db *gorm.DB) (*Job, error) {
+	var jobs []Job
+	if err := db.Model(&Job{}).Clauses(clause.Returning{}).Where("id = ?", j.ID).Updates(j).Scan(&jobs).Error; err != nil {
+		return nil, err
+	}
+	return &jobs[0], nil
 }
 
 func (j Job) Delete(db *gorm.DB) error {
