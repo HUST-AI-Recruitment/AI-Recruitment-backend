@@ -3,6 +3,7 @@ package model
 import (
 	"AI-Recruitment-backend/pkg/common"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Application struct {
@@ -30,7 +31,7 @@ func (a Application) Delete(db *gorm.DB) error {
 
 func (a Application) Get(db *gorm.DB) (*Application, error) {
 	var userJob Application
-	err := db.Where("user_id = ? AND job_id = ?", a.UserID, a.JobID).First(&userJob).Error
+	err := db.Where("id = ?", a.ID).First(&userJob).Error
 	if err != nil {
 		return &userJob, err
 	}
@@ -53,4 +54,12 @@ func (a Application) GetByJobID(db *gorm.DB) (*[]Application, error) {
 		return &userJobs, err
 	}
 	return &userJobs, nil
+}
+
+func (a Application) Update(db *gorm.DB) (*Application, error) {
+	var applications []Application
+	if err := db.Model(&Application{}).Clauses(clause.Returning{}).Where("id = ?", a.ID).Updates(a).Scan(&applications).Error; err != nil {
+		return nil, err
+	}
+	return &applications[0], nil
 }

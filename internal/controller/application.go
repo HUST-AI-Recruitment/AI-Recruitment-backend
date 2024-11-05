@@ -139,3 +139,90 @@ func GetApplicationsByJobId(c *gin.Context) {
 
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"applications": applicationsData}, "applications retrieved")
 }
+
+func UpdateApplicationProgress(c *gin.Context) {
+	userData, _ := c.Get("user")
+	role := userData.(map[string]string)["role"]
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
+
+	var req param.ReqUpdateApplication
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid params", err.Error())
+		return
+	}
+	// get application
+	application := &model.Application{
+		Model: &gorm.Model{ID: req.ID},
+	}
+	application, err := application.Get(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "application does not exist", err.Error())
+		return
+	}
+
+	// check permission
+	if role == common.Candidate.String() {
+		if application.UserID != uint(uidInt) {
+			response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+			return
+		}
+		if application.Progress != common.RecruiterAccepted {
+			response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid progress", "")
+			return
+		}
+	} else if role == common.Recruiter.String() {
+		job := &model.Job{
+			Model: &gorm.Model{ID: application.JobID},
+		}
+		job, err := job.Get(global.DBEngine)
+		if err != nil {
+			response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "database error", err.Error())
+			return
+		}
+		if job.OwnerID != uint(uidInt) {
+			response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+			return
+		}
+		if application.Progress != common.CandidateApplied && application.Progress != common.RecruiterReviewed {
+			response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid progress", "")
+			return
+		}
+	} else {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
+	// update progress
+	switch application.Progress {
+	case common.CandidateApplied:
+		if req.Accepted {
+			application.Progress = common.RecruiterReviewed
+		} else {
+			application.Progress = common.CandidateRejected
+		}
+	case common.RecruiterReviewed:
+		if req.Accepted {
+			application.Progress = common.RecruiterAccepted
+		} else {
+			application.Progress = common.RecruiterRejected
+		}
+	case common.RecruiterAccepted:
+		if req.Accepted {
+			application.Progress = common.CandidateAccepted
+		} else {
+			application.Progress = common.CandidateRejected
+		}
+	default:
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid progress", "")
+	}
+
+	application, err = application.Update(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "database error", err.Error())
+		return
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess,
+		response.Data{"id": application.ID, "user_id": application.UserID, "job_id": application.JobID, "progress": application.Progress},
+		"progress updated")
+}

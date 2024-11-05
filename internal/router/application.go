@@ -12,5 +12,5 @@ func initApplicationRouters(r *gin.RouterGroup) {
 	applicationsAuth.POST("", controller.CreateApplication)                 // apply for job
 	applicationsAuth.GET("", controller.GetApplicationsByUserId)            // get user's applications
 	applicationsAuth.GET("/job/:job_id", controller.GetApplicationsByJobId) // get applications by job
-	applicationsAuth.PUT("/:id")                                            // update progress of application
+	applicationsAuth.PUT("/:id", controller.UpdateApplicationProgress)      // update progress of application
 }
