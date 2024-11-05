@@ -62,6 +62,7 @@ func GetJobList(c *gin.Context) {
 			Company:     j.Company,
 			Salary:      j.Salary,
 			JobType:     j.JobType,
+			OwnerID:     j.OwnerID,
 		})
 	}
 
@@ -95,6 +96,7 @@ func GetJobByID(c *gin.Context) {
 		Company:     job.Company,
 		Salary:      job.Salary,
 		JobType:     job.JobType,
+		OwnerID:     job.OwnerID,
 	}
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"job": jobData}, "get job success")
 }

@@ -34,6 +34,7 @@ type JobData struct {
 	Company     string `json:"company"`
 	Salary      string `json:"salary"`
 	JobType     string `json:"job_type"`
+	OwnerID     uint   `json:"owner_id"`
 }
 
 type ResumeData struct {
