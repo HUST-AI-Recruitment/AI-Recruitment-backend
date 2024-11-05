@@ -32,7 +32,7 @@ func initDB() error {
 		&model.ResumeEducation{},
 		&model.ResumeExperience{},
 		&model.ResumeProject{},
-		&model.UserJob{},
+		&model.Application{},
 	})
 	if err != nil {
 		return err
