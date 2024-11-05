@@ -18,6 +18,12 @@ func GetJobList(c *gin.Context) {
 	company := c.Query("company")
 	salary := c.Query("salary")
 	jobType := c.Query("job_type")
+	own := c.Query("own")
+
+	ownBool, err := strconv.ParseBool(own)
+	if err != nil {
+		ownBool = false
+	}
 
 	job := &model.Job{
 		Location: location,
@@ -25,6 +31,20 @@ func GetJobList(c *gin.Context) {
 		Salary:   salary,
 		JobType:  jobType,
 	}
+
+	// check role of user
+	userData, _ := c.Get("user")
+	role := userData.(map[string]string)["role"]
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
+	if ownBool {
+		if role != common.Role(1).String() {
+			response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+			return
+		}
+		job.OwnerID = uint(uidInt)
+	}
+
 	jobs, err := job.GetAll(global.DBEngine)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get all jobs failed", err.Error())
