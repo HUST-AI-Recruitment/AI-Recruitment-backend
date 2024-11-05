@@ -73,6 +73,13 @@ type ResumeProject struct {
 	EndTime     time.Time `json:"end_time"`
 }
 
+type ApplicationData struct {
+	ID       uint            `json:"id"`
+	UserID   uint            `json:"user_id"`
+	JobID    uint            `json:"job_id"`
+	Progress common.Progress `json:"progress"`
+}
+
 func Success(c *gin.Context, status int, code ErrorCode, data Data, msg string) {
 	c.JSON(status, response{
 		Code: code,

@@ -16,7 +16,7 @@ func CreateResume(c *gin.Context) {
 	role := userData.(map[string]string)["role"]
 	uid := userData.(map[string]string)["id"]
 	uidInt, _ := strconv.Atoi(uid)
-	if role != common.Role(2).String() {
+	if role != common.Candidate.String() {
 		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
 		return
 	}
@@ -171,7 +171,7 @@ func UpdateResumeByUserId(c *gin.Context) {
 	role := userData.(map[string]string)["role"]
 	uid := userData.(map[string]string)["id"]
 	uidInt, _ := strconv.Atoi(uid)
-	if role != common.Role(2).String() {
+	if role != common.Candidate.String() {
 		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
 		return
 	}

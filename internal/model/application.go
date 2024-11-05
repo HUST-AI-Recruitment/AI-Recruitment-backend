@@ -16,8 +16,12 @@ func (a Application) TableName() string {
 	return "application"
 }
 
-func (a Application) Create(db *gorm.DB) error {
-	return db.Create(&a).Error
+func (a Application) Create(db *gorm.DB) (uint, error) {
+	res := db.Create(&a)
+	if res.Error != nil {
+		return 0, res.Error
+	}
+	return a.ID, nil
 }
 
 func (a Application) Delete(db *gorm.DB) error {

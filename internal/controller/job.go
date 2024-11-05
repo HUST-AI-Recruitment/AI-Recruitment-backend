@@ -38,7 +38,7 @@ func GetJobList(c *gin.Context) {
 	uid := userData.(map[string]string)["id"]
 	uidInt, _ := strconv.Atoi(uid)
 	if ownBool {
-		if role != common.Role(1).String() {
+		if role != common.Recruiter.String() {
 			response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
 			return
 		}
@@ -105,7 +105,7 @@ func CreateJob(c *gin.Context) {
 	role := userData.(map[string]string)["role"]
 	uid := userData.(map[string]string)["id"]
 	uidInt, _ := strconv.Atoi(uid)
-	if role != common.Role(1).String() {
+	if role != common.Recruiter.String() {
 		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
 		return
 	}
