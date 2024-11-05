@@ -30,6 +30,7 @@ func GetJobList(c *gin.Context) {
 		Company:  company,
 		Salary:   salary,
 		JobType:  jobType,
+		OwnerID:  0,
 	}
 
 	// check role of user

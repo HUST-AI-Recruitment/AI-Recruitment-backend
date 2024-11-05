@@ -59,6 +59,9 @@ func (j Job) GetAll(db *gorm.DB) (*[]Job, error) {
 	if j.Salary != "" {
 		query = query.Where("salary = ?", j.Salary)
 	}
+	if j.OwnerID != 0 {
+		query = query.Where("owner_id = ?", j.OwnerID)
+	}
 
 	err := query.Find(&jobs).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
