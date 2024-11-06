@@ -12,9 +12,9 @@ func initUserRouters(r *gin.RouterGroup) {
 
 	userAuth := users.Group("/:id")
 	userAuth.Use(middleware.JwtAuthMiddleware())
-	userAuth.GET("/profile", controller.GetProfile) // get user profile
-	userAuth.PUT("/profile")                        // update user profile
-	userAuth.PUT("/password")                       // update user password
+	userAuth.GET("/profile", controller.GetUserProfile)    // get user profile
+	userAuth.PUT("/profile", controller.UpdateUserProfile) // update user profile
+	userAuth.DELETE("")                                    // delete user
 
 	session := r.Group("/session")
 	session.POST("", controller.Login) // login

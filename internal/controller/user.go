@@ -81,7 +81,7 @@ func Login(c *gin.Context) {
 		"login success")
 }
 
-func GetProfile(c *gin.Context) {
+func GetUserProfile(c *gin.Context) {
 	id := c.Param("id")
 	idUint, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
@@ -106,4 +106,42 @@ func GetProfile(c *gin.Context) {
 		Degree:   user.Degree,
 	}
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"profile": userData}, "get user profile success")
+}
+
+func UpdateUserProfile(c *gin.Context) {
+	userData, _ := c.Get("user")
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
+
+	id := c.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid id", err.Error())
+		return
+	}
+	if idInt != uidInt {
+		response.Error(c, http.StatusForbidden, response.CodeInvalidParams, "forbidden", "")
+		return
+	}
+
+	var req param.ReqUpdateProfile
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid params", err.Error())
+		return
+	}
+
+	user := &model.User{
+		Model: &gorm.Model{ID: uint(uidInt)},
+	}
+	err = user.Update(global.DBEngine, map[string]interface{}{
+		"username": req.Username,
+		"email":    req.Email,
+		"age":      req.Age,
+		"degree":   req.Degree,
+	})
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "update user profile failed", "")
+		return
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": user.ID}, "update user profile success")
 }

@@ -193,3 +193,45 @@ func UpdateJob(c *gin.Context) {
 	}
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": job.ID}, "update job success")
 }
+
+func DeleteJob(c *gin.Context) {
+	// check role of user
+	userData, _ := c.Get("user")
+	role := userData.(map[string]string)["role"]
+	uid := userData.(map[string]string)["id"]
+	uidInt, _ := strconv.Atoi(uid)
+	if role != common.Recruiter.String() {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
+	jobId := c.Param("id")
+	jobIdInt, err := strconv.Atoi(jobId)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "invalid id", err.Error())
+		return
+	}
+
+	// check if the job exists
+	job := &model.Job{
+		Model: &gorm.Model{ID: uint(jobIdInt)},
+	}
+	job, err = job.Get(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "get job failed", err.Error())
+		return
+	}
+
+	// check if the job belongs to the user
+	if job.OwnerID != uint(uidInt) {
+		response.Error(c, http.StatusForbidden, response.CodeForbidden, "permission denied", "")
+		return
+	}
+
+	err = job.Delete(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "delete job failed", err.Error())
+		return
+	}
+	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": job.ID}, "delete job success")
+}
