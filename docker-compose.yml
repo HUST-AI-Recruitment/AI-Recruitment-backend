@@ -10,6 +10,11 @@ services:
     depends_on:
       - db
     restart: always
+  ai:
+    build: ./AI-service
+    networks:
+      - recruitment
+    restart: always
   db:
     image: mysql:8
     environment:

@@ -4,7 +4,7 @@ app:
   debug: true
 database:
   username: root
-  password: HUST1037!@#$
+  password: root
   host: 'db:3306'
   db_name: ai_recruitment
   charset: utf8
@@ -15,3 +15,5 @@ jwt:
   key: "FUCKINGSoftwareEngine"
   issuer: "HUST"
   expire: 604800
+ai:
+  addr: 'http://ai:5000/api/v1'

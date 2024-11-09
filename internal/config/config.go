@@ -10,6 +10,7 @@ type Config struct {
 	App      App      `yaml:"app"`
 	Jwt      Jwt      `yaml:"jwt"`
 	Database Database `yaml:"database"`
+	AI       AI       `yaml:"ai"`
 }
 
 type App struct {
@@ -33,6 +34,10 @@ type Database struct {
 	ParseTime    bool   `yaml:"parse_time"`
 	MaxIdleConns int    `yaml:"max_idle_conns"`
 	MaxOpenConns int    `yaml:"max_open_conns"`
+}
+
+type AI struct {
+	Addr string `yaml:"addr"`
 }
 
 func NewConfig() (*Config, error) {

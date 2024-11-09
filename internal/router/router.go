@@ -11,4 +11,5 @@ func InitRouters(r *gin.Engine) {
 	initJobRouters(api)
 	initResumeRouters(api)
 	initApplicationRouters(api)
+	initRecommendRouters(api)
 }
