@@ -1,0 +1,3 @@
+[submodule "AI-service"]
+	path = AI-service
+	url = git@github.com:HUST-AI-Recruitment/AI-service.git
