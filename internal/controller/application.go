@@ -37,6 +37,15 @@ func CreateApplication(c *gin.Context) {
 		return
 	}
 
+	// verify if the resume exists
+	resume := &model.Resume{
+		UserID: uint(uidInt),
+	}
+	if _, err := resume.Get(global.DBEngine); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "resume does not exist", err.Error())
+		return
+	}
+
 	application := &model.Application{
 		UserID:   uint(uidInt),
 		JobID:    req.JobID,
