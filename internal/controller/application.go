@@ -52,6 +52,12 @@ func CreateApplication(c *gin.Context) {
 		Progress: common.CandidateApplied,
 	}
 
+	// check if the application already exists
+	if _, err := application.GetByUserIDAndJobID(global.DBEngine); err == nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "application already exists", "")
+		return
+	}
+
 	id, err := application.Create(global.DBEngine)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "database error", err.Error())

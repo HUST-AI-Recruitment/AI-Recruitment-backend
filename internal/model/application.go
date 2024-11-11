@@ -56,6 +56,15 @@ func (a Application) GetByJobID(db *gorm.DB) (*[]Application, error) {
 	return &userJobs, nil
 }
 
+func (a Application) GetByUserIDAndJobID(db *gorm.DB) (*[]Application, error) {
+	var userJobs []Application
+	err := db.Where("user_id =? AND job_id = ?", a.UserID, a.JobID).Find(&userJobs).Error
+	if err != nil {
+		return &userJobs, err
+	}
+	return &userJobs, nil
+}
+
 func (a Application) Update(db *gorm.DB) (*Application, error) {
 	var applications []Application
 	if err := db.Model(&Application{}).Clauses(clause.Returning{}).Where("id = ?", a.ID).Updates(a).Scan(&applications).Error; err != nil {
