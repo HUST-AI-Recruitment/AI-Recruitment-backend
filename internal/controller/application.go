@@ -41,7 +41,7 @@ func CreateApplication(c *gin.Context) {
 	resume := &model.Resume{
 		UserID: uint(uidInt),
 	}
-	if _, err := resume.Get(global.DBEngine); err != nil {
+	if _, err := resume.GetByUserID(global.DBEngine); err != nil {
 		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "resume does not exist", err.Error())
 		return
 	}
