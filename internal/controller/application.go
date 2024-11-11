@@ -33,7 +33,7 @@ func CreateApplication(c *gin.Context) {
 		Model: &gorm.Model{ID: req.JobID},
 	}
 	if _, err := job.Get(global.DBEngine); err != nil {
-		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "job does not exist", err.Error())
+		response.Error(c, http.StatusBadRequest, response.CodeRecordNotFound, "job does not exist", err.Error())
 		return
 	}
 
@@ -42,7 +42,7 @@ func CreateApplication(c *gin.Context) {
 		UserID: uint(uidInt),
 	}
 	if _, err := resume.GetByUserID(global.DBEngine); err != nil {
-		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "resume does not exist", err.Error())
+		response.Error(c, http.StatusBadRequest, response.CodeRecordNotFound, "resume does not exist", err.Error())
 		return
 	}
 
