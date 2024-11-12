@@ -52,20 +52,26 @@ AI 职达 是一个 AI 驱动的招聘平台的后端系统，帮助公司管理
 
 ### 1. 克隆仓库
 
+```bash
 git clone https://github.com/your-repo/AI-Recruitment-backend.git
 cd AI-Recruitment-backend
+```
 
 ### 2. 安装 Go 依赖
 
 确保已安装 Go，运行以下命令：
 
+```bash
 go mod tidy
+```
 
 ### 3. 设置 MySQL 数据库
 
 确保 MySQL 运行并创建数据库：
 
+```sql
 CREATE DATABASE ai_recruitment;
+```
 
 ### 4. 运行数据库迁移
 
@@ -75,7 +81,9 @@ CREATE DATABASE ai_recruitment;
 
 在本地启动后端：
 
+```bash
 go run main.go
+```
 
 服务器将运行在 http://localhost:8001。
 
@@ -83,7 +91,9 @@ go run main.go
 
 若使用独立的 AI 服务，进入 AI 服务目录并启动：
 
+```bash
 python AI-service/main.py
+```
 
 AI 服务将在 http://localhost:5000 运行。
 
@@ -93,13 +103,13 @@ AI 服务将在 http://localhost:5000 运行。
 
 使用 Docker 部署后端：
 
-	1.	构建 Docker 镜像：
+1.	构建 Docker 镜像：
 
 ```bash
 docker build -t ai-recruitment-backend .
 ```
 
-	2.	运行 Docker 容器：
+2.	运行 Docker 容器：
 
 ```bash
 docker run -p 8001:8000 ai-recruitment-backend
@@ -115,11 +125,11 @@ docker compose up -d --build
 
 欢迎贡献！如果您想要参与：
 
-	1.	Fork 此仓库。
-	2.	创建一个新分支（git checkout -b feature-xyz）。
-	3.	完成更改并提交（git commit -m 'Add new feature'）。
-	4.	将更改推送到您的 Fork 仓库（git push origin feature-xyz）。
-	5.	向主仓库提交 Pull Request。
+1.	Fork 此仓库。
+2.	创建一个新分支（git checkout -b feature-xyz）。
+3.	完成更改并提交（git commit -m 'Add new feature'）。
+4.	将更改推送到您的 Fork 仓库（git push origin feature-xyz）。
+5.	向主仓库提交 Pull Request。
 
 ## 许可证
 
