@@ -1,5 +1,7 @@
 # **AI-Recruitment-backend**
 
+[简体中文](./README_zhCN.md)
+
 ## **Project Overview**
 
 **AI-Recruitment-backend** is the backend system for an AI-powered recruitment platform. It allows companies to manage job listings, resumes, and streamline the hiring process with AI-driven candidate analysis and job matching.
@@ -18,15 +20,19 @@ This backend is built with **Go** and the **Gin** web framework, with **MySQL** 
 ## **Project Structure**
 
 ```
-├── controllers/        # Request handlers (job posts, users, resumes)
-├── models/             # Database schema and ORM
-├── routes/             # API route definitions
-├── services/           # Core logic and AI service integration
-├── middleware/         # Authentication middleware (JWT)
-├── config/             # Configuration settings (database, AI, JWT)
-├── utils/              # Utility functions
-├── tests/              # Unit and integration tests
-└── main.go             # Application entry point
+├── AI-service            # AI-related logic and functions
+├── Dockerfile            # Docker setup
+├── LICENSE               # License file
+├── README.md             # Project overview and instructions
+├── bin                   # Compiled binaries
+├── cmd                   # App entry points
+├── configs               # Config files
+├── data                  # Data storage
+├── docker-compose.yml    # Docker Compose config for multi-service setup
+├── docs                  # Documentation (API docs, design notes)
+├── internal              # Internal code, project-only
+├── pkg                   # Reusable packages
+└── scripts               # Scripts
 ```
 
 ## **Tech Stack**
@@ -61,22 +67,7 @@ Ensure you have Go installed, then run:
 go mod tidy
 ```
 
-### **3. Configure Environment Variables**
-
-Create a `.env` file in the root directory and add the following variables:
-
-```bash
-PORT=8080
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=ai_recruitment
-JWT_SECRET=your_jwt_secret_key
-AI_SERVICE_URL=http://localhost:5000/analyze
-```
-
-### **4. Set up the MySQL Database**
+### **3. Set up the MySQL Database**
 
 Ensure MySQL is running and create the database:
 
@@ -84,11 +75,11 @@ Ensure MySQL is running and create the database:
 CREATE DATABASE ai_recruitment;
 ```
 
-### **5. Run Database Migrations**
+### **4. Run Database Migrations**
 
 Run any required migrations to set up the database schema.
 
-### **6. Start the Application**
+### **5. Start the Application**
 
 Launch the backend locally:
 
@@ -96,25 +87,17 @@ Launch the backend locally:
 go run main.go
 ```
 
-The server will run at `http://localhost:8080`.
+The server will run at `http://localhost:8001`.
 
 ### **7. Start the AI Service**
 
 If you are using a separate AI service, navigate to the AI service directory and start it:
 
 ```bash
-python ai_service.py
+python AI-service/main.py
 ```
 
 The AI service will run on `http://localhost:5000`.
-
-## **Running Tests**
-
-To run the unit tests for the backend, use:
-
-```bash
-go test ./...
-```
 
 ## **Deployment**
 
@@ -131,12 +114,14 @@ To deploy the backend using Docker:
 2. **Run the Docker container:**
 
    ```bash
-   docker run -p 8080:8080 ai-recruitment-backend
+   docker run -p 8001:8000 ai-recruitment-backend
    ```
 
-### **Kubernetes Deployment** (Optional)
+### **Docker Compose Deployment**
 
-For large-scale deployment, you can use Kubernetes. Example deployment files can be included in the `k8s/` folder.
+```bash
+docker compose up -d --build
+```
 
 ## **Contributing**
 
