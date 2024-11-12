@@ -85,7 +85,7 @@ CREATE DATABASE ai_recruitment;
 go run main.go
 ```
 
-服务器将运行在 http://localhost:8001。
+服务器将运行在 `http://localhost:8001`。
 
 ### 7. 启动 AI 服务
 
@@ -95,7 +95,7 @@ go run main.go
 python AI-service/main.py
 ```
 
-AI 服务将在 http://localhost:5000 运行。
+AI 服务将在 `http://localhost:5000` 运行。
 
 ## 部署
 
