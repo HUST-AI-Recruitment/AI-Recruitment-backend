@@ -29,6 +29,10 @@ func (a Application) Delete(db *gorm.DB) error {
 	return db.Delete(&a).Error
 }
 
+func (a Application) DeleteByJobID(db *gorm.DB) error {
+	return db.Where("job_id = ?", a.JobID).Delete(&a).Error
+}
+
 func (a Application) Get(db *gorm.DB) (*Application, error) {
 	var userJob Application
 	err := db.Where("id = ?", a.ID).First(&userJob).Error

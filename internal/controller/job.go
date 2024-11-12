@@ -233,5 +233,15 @@ func DeleteJob(c *gin.Context) {
 		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "delete job failed", err.Error())
 		return
 	}
+
+	// delete all related applications
+	application := &model.Application{
+		JobID: job.ID,
+	}
+	err = application.DeleteByJobID(global.DBEngine)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeServerBusy, "delete job related applications failed", err.Error())
+		return
+	}
 	response.Success(c, http.StatusOK, response.CodeSuccess, response.Data{"id": job.ID}, "delete job success")
 }
