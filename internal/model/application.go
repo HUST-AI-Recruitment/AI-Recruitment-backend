@@ -62,7 +62,7 @@ func (a Application) GetByJobID(db *gorm.DB) (*[]Application, error) {
 
 func (a Application) GetByUserIDAndJobID(db *gorm.DB) (*[]Application, error) {
 	var userJobs []Application
-	err := db.Where("user_id =? AND job_id = ?", a.UserID, a.JobID).Find(&userJobs).Error
+	err := db.Where("user_id = ? AND job_id = ?", a.UserID, a.JobID).Find(&userJobs).Error
 	if err != nil {
 		return &userJobs, err
 	}
